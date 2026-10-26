@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ห้องทดลองโดเมนและเรนจ์ | คณิตศาสตร์ ม.4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Noto+Serif+Thai:wght@400;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sage:#aab5b0;--sage-2:#9ea9a4;--paper:#f3f1eb;--cream:#e9e3d6;
+  --ink:#1b2130;--muted:#4c5660;--hair:#1b21302e;
+  --accent:#d4561f;--terracotta:#c2562b;--green:#2f6b4f;--red:#b23a2e;
+  --serif:"Gloock","Noto Serif Thai",Georgia,serif;
+  --sans:"IBM Plex Sans Thai",Tahoma,"Noto Sans Thai",sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--sage);line-height:1.6}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:auto;padding:0 28px}
+
+/* ---------- Top bar ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:26px 0;font-size:.8rem;letter-spacing:.06em}
+.logo{font-weight:600;text-transform:uppercase}
+.nav{display:flex;align-items:center;gap:28px}
+.nav a:hover{text-decoration:underline;text-underline-offset:4px}
+.round{width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--paper);display:inline-grid;place-items:center;border:0;cursor:pointer;transition:transform .2s,background .2s;padding:0}
+.round:hover{transform:scale(1.06);background:#000}
+.round.lg{width:62px;height:62px}
+.round svg{width:20px;height:20px}
+
+/* ---------- Hero ---------- */
+.hero{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;padding:28px 0 34px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.5rem,6.6vw,5rem);line-height:1.04;margin:0;letter-spacing:-.01em}
+h1 em{font-style:italic;font-family:Georgia,"Noto Serif Thai",serif;font-weight:400}
+.hero p{max-width:560px;margin:18px 0 0;color:var(--muted);font-size:.95rem}
+.arrows{display:flex;gap:10px}
+
+/* ---------- Gallery ---------- */
+.track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}
+.track::-webkit-scrollbar{display:none}
+.tile{flex:0 0 clamp(230px,30%,360px);scroll-snap-align:start;background:none;border:0;padding:0;text-align:left;cursor:pointer;color:var(--ink);font:inherit}
+.tile .thumb{display:block;width:100%;aspect-ratio:4/5;transition:transform .35s ease,filter .35s}
+.tile:hover .thumb{filter:brightness(1.06)}
+.tile .frame{overflow:hidden;outline:1px solid transparent;transition:outline-color .2s}
+.tile.active .frame{outline:2px solid var(--ink);outline-offset:4px}
+.cap{display:flex;justify-content:space-between;gap:10px;font-size:.82rem;padding-top:12px}
+.cap span:last-child{color:var(--muted)}
+
+/* ---------- Sections ---------- */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid var(--ink);margin-top:56px;padding-top:14px;margin-bottom:22px}
+.section-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,3.4vw,2.4rem);margin:0;line-height:1.1}
+.section-head .num{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+
+.layout{display:grid;grid-template-columns:minmax(280px,.85fr) minmax(0,1.35fr);gap:20px;align-items:start}
+.panel{background:var(--paper);padding:24px;margin-bottom:20px}
+.panel h3{font-family:var(--serif);font-weight:400;font-size:1.35rem;margin:0 0 14px;line-height:1.2}
+.panel h3 small{display:block;font-family:var(--sans);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.intro{font-size:.9rem;color:var(--muted);margin:-6px 0 14px}
+
+label{font-weight:500;display:block;font-size:.85rem;margin:14px 0 6px}
+select,input,textarea{font:inherit;width:100%;padding:11px 12px;border:1px solid var(--hair);border-radius:0;background:#fff;color:var(--ink);outline:none;transition:border-color .2s}
+select:focus,input:focus,textarea:focus{border-color:var(--ink)}
+textarea{min-height:110px;resize:vertical;font-family:ui-monospace,Consolas,monospace;font-size:.9rem}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.two label{margin-top:0}
+
+button.btn{font:inherit;font-weight:500;font-size:.86rem;border-radius:999px;padding:11px 20px;cursor:pointer;transition:.18s;border:1px solid var(--ink)}
+.primary{background:var(--ink);color:var(--paper)}
+.primary:hover{background:#000}
+.secondary{background:transparent;color:var(--ink)}
+.secondary:hover{background:var(--ink);color:var(--paper)}
+.accent{background:var(--accent);border-color:var(--accent)!important;color:#fff}
+.accent:hover{filter:brightness(.93)}
+.btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.hint{font-size:.8rem;color:var(--muted);margin:7px 0}
+.error{color:var(--red);font-size:.88rem;margin-top:10px;min-height:1.3em}
+
+.graphwrap{background:#f7f5ef;border:1px solid var(--hair)}
+canvas#graph{display:block;width:100%;height:380px;touch-action:pan-y}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.78rem;color:var(--muted);padding:8px 12px;border-top:1px solid var(--hair)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.formula{font-family:Georgia,"Noto Serif Thai",serif;font-style:italic;font-size:1.25rem;margin:18px 0 14px;overflow-wrap:anywhere}
+
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{border:1px solid var(--ink);padding:14px 14px 12px;position:relative;min-height:110px}
+.stat:before{content:"↗";position:absolute;top:8px;left:12px;font-size:.9rem}
+.stat .tag{display:block;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;margin:16px 0 4px;color:var(--muted)}
+.stat strong{display:block;font-family:Georgia,"Noto Serif Thai",serif;font-style:italic;font-weight:400;font-size:1.2rem;overflow-wrap:anywhere}
+.stat .hint{margin:4px 0 0}
+.explain{background:var(--cream);border-left:3px solid var(--terracotta);padding:13px 15px;font-size:.88rem;margin-top:14px}
+
+#observations{margin:0;padding:0;list-style:none;counter-reset:o}
+#observations li{counter-increment:o;padding:11px 0 11px 40px;border-top:1px solid var(--hair);position:relative;font-size:.92rem}
+#observations li:first-child{border-top:0}
+#observations li:before{content:counter(o,decimal-leading-zero);position:absolute;left:0;top:11px;font-size:.78rem;color:var(--muted)}
+
+/* ---------- Quiz ---------- */
+.quizgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.quizq{background:var(--paper);padding:22px;display:flex;flex-direction:column}
+.quizq .qn{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.quizq p{font-family:var(--serif);font-weight:400;font-size:1.12rem;line-height:1.35;margin:6px 0 14px}
+.quizq label{font-weight:400;display:flex;gap:10px;align-items:flex-start;margin:0 0 8px;padding:10px 12px;border:1px solid var(--hair);cursor:pointer;font-size:.88rem;transition:.15s}
+.quizq label:hover{border-color:var(--ink)}
+.quizq label:has(input:checked){background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.quizq input{width:auto;margin:5px 0 0;accent-color:var(--accent)}
+.feedback{font-size:.85rem;margin-top:8px}
+.quizfoot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-top:20px}
+.quizfoot .btnrow{margin:0}
+.score{font-family:var(--serif);font-size:1.3rem}
+
+.footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid var(--ink);margin-top:56px;padding:16px 0 30px;font-size:.78rem;letter-spacing:.04em}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .quizgrid{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .wrap{padding:0 16px}
+  .nav{gap:16px}.nav a.hide-sm{display:none}
+  .hero{grid-template-columns:1fr}
+  .round.lg{width:50px;height:50px}
+  .tile{flex-basis:72%}
+  .panel{padding:18px}
+  canvas#graph{height:300px}
+  .statgrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="logo">Math Lab · ม.4</div>
+  <nav class="nav">
+    <a href="#lab" class="hide-sm">ห้องทดลอง</a>
+    <a href="#quiz">แบบทดสอบ</a>
+    <a class="round" href="#gallery" aria-label="ไปที่ตัวอย่าง">
+      <svg viewBox="0 0 20 20" fill="currentColor"><circle cx="4" cy="4" r="1.6"/><circle cx="10" cy="4" r="1.6"/><circle cx="16" cy="4" r="1.6"/><circle cx="4" cy="10" r="1.6"/><circle cx="10" cy="10" r="1.6"/><circle cx="16" cy="10" r="1.6"/><circle cx="4" cy="16" r="1.6"/><circle cx="10" cy="16" r="1.6"/><circle cx="16" cy="16" r="1.6"/></svg>
+    </a>
+  </nav>
+</div>
+
+<!-- Hero -->
+<header class="hero">
+  <div>
+    <h1>ห้องทดลอง<br><em>Domain</em> &amp; <em>Range</em></h1>
+    <p>ปรับสมการหรือชุดคู่อันดับ แล้วสังเกตกราฟ โดเมน และเรนจ์แบบทันที เพื่อค้นหาว่า “ค่าเข้า” และ “ค่าผลลัพธ์” ของความสัมพันธ์เปลี่ยนไปอย่างไร</p>
+  </div>
+  <div class="arrows">
+    <button class="round lg" id="prev" aria-label="ตัวอย่างก่อนหน้า"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+    <button class="round lg" id="next" aria-label="ตัวอย่างถัดไป"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  </div>
+</header>
+
+<!-- Example gallery -->
+<section id="gallery" aria-label="ตัวอย่างความสัมพันธ์">
+  <div class="track" id="track">
+    <button class="tile active" data-example="x^2"><div class="frame"><canvas class="thumb" data-bg="#c2562b" data-fg="#f3e6d8"></canvas></div><div class="cap"><span>y = x²</span><span>R = [0, ∞)</span></div></button>
+    <button class="tile" data-example="2*x+1"><div class="frame"><canvas class="thumb" data-bg="#2a2d33" data-fg="#f3f1eb"></canvas></div><div class="cap"><span>y = 2x + 1</span><span>D = ℝ</span></div></button>
+    <button class="tile" data-example="sqrt(x)"><div class="frame"><canvas class="thumb" data-bg="#c7d2d9" data-fg="#1b2130"></canvas></div><div class="cap"><span>y = √x</span><span>D = [0, ∞)</span></div></button>
+    <button class="tile" data-example="1/x"><div class="frame"><canvas class="thumb" data-bg="#1b2130" data-fg="#e8a33d"></canvas></div><div class="cap"><span>y = 1/x</span><span>D = ℝ \ {0}</span></div></button>
+    <button class="tile" data-example="sin(x)"><div class="frame"><canvas class="thumb" data-bg="#ebe5d7" data-fg="#c2562b"></canvas></div><div class="cap"><span>y = sin(x)</span><span>R = [−1, 1]</span></div></button>
+    <button class="tile" data-example="pairs"><div class="frame"><canvas class="thumb" data-bg="#3c4943" data-fg="#e9e3d6"></canvas></div><div class="cap"><span>คู่อันดับ</span><span>เซตจำกัด</span></div></button>
+  </div>
+</section>
+
+<!-- Lab -->
+<div class="section-head" id="lab"><h2>ห้องทดลอง</h2><span class="num">01 — ป้อน · สังเกต · สรุป</span></div>
+<div class="layout">
+  <section>
+    <div class="panel">
+      <h3><small>ขั้นที่ 1</small>เลือกรูปแบบข้อมูล</h3>
+      <label for="mode">รูปแบบความสัมพันธ์</label>
+      <select id="mode"><option value="equation">สมการ y = f(x)</option><option value="pairs">เซตของคู่อันดับ (x, y)</option></select>
+      <div id="equationBox">
+        <label for="equation">ป้อนสมการในรูป y = f(x)</label>
+        <input id="equation" value="x^2" autocomplete="off" spellcheck="false">
+        <p class="hint">รองรับ x, ตัวเลข, + − * / ^, วงเล็บ และฟังก์ชัน sqrt(x), abs(x), sin(x), cos(x), tan(x) ตัวอย่าง x^2, 2*x+1, sqrt(x)</p>
+        <label>ช่วงค่า x ที่ต้องการสำรวจ</label>
+        <div class="two">
+          <div><label for="xmin" class="hint">x ต่ำสุด</label><input type="number" id="xmin" value="-5" step="1"></div>
+          <div><label for="xmax" class="hint">x สูงสุด</label><input type="number" id="xmax" value="5" step="1"></div>
+        </div>
+        <p class="hint">ช่วงนี้ใช้สร้างภาพกราฟเพื่อสำรวจ ไม่ได้หมายความว่าโดเมนของฟังก์ชันมีเพียงช่วงนี้เสมอไป</p>
+      </div>
+      <div id="pairsBox" hidden>
+        <label for="pairs">ป้อนคู่อันดับ คั่นด้วยบรรทัดใหม่หรือเครื่องหมายจุลภาค</label>
+        <textarea id="pairs" spellcheck="false">(1, 2)
+(2, 4)
+(3, 4)
+(4, 6)</textarea>
+        <p class="hint">ตัวอย่าง: (1,2), (2,4), (3,4) หรือเขียนหนึ่งคู่ต่อหนึ่งบรรทัด ระบบจะตรวจว่าค่า x เดียวกันจับคู่กับ y ต่างกันหรือไม่</p>
+      </div>
+      <div class="btnrow"><button class="btn accent" id="update">อัปเดตกราฟและผลลัพธ์</button><button class="btn secondary" id="reset">คืนค่าเริ่มต้น</button></div>
+      <div class="error" id="error" role="status"></div>
+    </div>
+    <div class="panel">
+      <h3><small>ขั้นที่ 4</small>สรุปสิ่งที่ค้นพบ</h3>
+      <ul id="observations"><li>เปลี่ยนสมการหรือชุดคู่อันดับ แล้วสังเกตว่าโดเมนและเรนจ์เปลี่ยนอย่างไร</li></ul>
+      <p class="hint">ข้อควรจำ: กราฟที่วาดจากช่วง x จำกัดเป็นเพียงภาพตัวอย่างของช่วงที่เลือก สำหรับสมการ ต้องพิจารณาเงื่อนไขทางคณิตศาสตร์ของสมการด้วย</p>
+    </div>
+  </section>
+  <section>
+    <div class="panel">
+      <h3><small>ขั้นที่ 2–3</small>กราฟแบบโต้ตอบ</h3>
+      <p class="intro">เลื่อนเมาส์บนกราฟเพื่ออ่านพิกัดโดยประมาณ หรือเลือกตัวอย่างจากแถวภาพด้านบน</p>
+      <div class="graphwrap"><canvas id="graph" aria-label="กราฟความสัมพันธ์"></canvas><div class="legend"><span><i class="dot" style="background:#c2562b"></i>กราฟหรือจุดข้อมูล</span><span><i class="dot" style="background:#1b2130"></i>ตำแหน่งที่ชี้</span></div></div>
+      <div class="formula" id="displayFormula">สมการ: y = x²</div>
+      <div class="statgrid">
+        <div class="stat"><span class="tag">โดเมน (Domain)</span><strong id="domain">กำลังคำนวณ…</strong><span class="hint">เซตของค่า x</span></div>
+        <div class="stat"><span class="tag">เรนจ์ (Range)</span><strong id="range">กำลังคำนวณ…</strong><span class="hint">เซตของค่า y</span></div>
+      </div>
+      <div class="explain" id="explanation">โดเมนคือค่าของตัวแปรต้น x ที่ความสัมพันธ์กำหนดได้ ส่วนเรนจ์คือค่าผลลัพธ์ y ที่เกิดขึ้น</div>
+    </div>
+  </section>
+</div>
+
+<!-- Quiz -->
+<div id="quiz">
+  <div class="section-head"><h2>คำถามท้ายกิจกรรม</h2><span class="num">02 — 3 ข้อ</span></div>
+  <p class="intro" style="margin:-8px 0 18px">เลือกคำตอบให้ครบทั้ง 3 ข้อ แล้วกดตรวจคำตอบเพื่อดูคะแนนและเฉลย</p>
+  <div class="quizgrid">
+    <div class="quizq" data-answer="b">
+      <span class="qn">ข้อ 01</span>
+      <p>หากความสัมพันธ์กำหนดด้วยเซต {(1, 2), (2, 4), (3, 6)} โดเมนคือข้อใด</p>
+      <label><input type="radio" name="q1" value="a"> {2, 4, 6}</label>
+      <label><input type="radio" name="q1" value="b"> {1, 2, 3}</label>
+      <label><input type="radio" name="q1" value="c"> {1, 2, 3, 4, 6}</label>
+      <div class="feedback" hidden></div>
+    </div>
+    <div class="quizq" data-answer="c">
+      <span class="qn">ข้อ 02</span>
+      <p>หาก y = x² และกำหนดโดเมนเป็น {−2, −1, 0, 1, 2} เรนจ์คือข้อใด</p>
+      <label><input type="radio" name="q2" value="a"> {−4, −1, 0, 1, 4}</label>
+      <label><input type="radio" name="q2" value="b"> {−2, −1, 0, 1, 2}</label>
+      <label><input type="radio" name="q2" value="c"> {0, 1, 4}</label>
+      <div class="feedback" hidden></div>
+    </div>
+    <div class="quizq" data-answer="a">
+      <span class="qn">ข้อ 03</span>
+      <p>เซตของคู่อันดับ {(1, 2), (1, 3), (2, 4)} เป็นฟังก์ชันหรือไม่ เพราะเหตุใด</p>
+      <label><input type="radio" name="q3" value="a"> ไม่เป็นฟังก์ชัน เพราะ x = 1 จับคู่กับ y สองค่า</label>
+      <label><input type="radio" name="q3" value="b"> เป็นฟังก์ชัน เพราะมีคู่อันดับ 3 คู่</label>
+      <label><input type="radio" name="q3" value="c"> เป็นฟังก์ชัน เพราะค่า y ไม่ซ้ำกัน</label>
+      <div class="feedback" hidden></div>
+    </div>
+  </div>
+  <div class="quizfoot">
+    <div class="btnrow"><button class="btn primary" id="checkQuiz">ตรวจคำตอบ</button><button class="btn secondary" id="clearQuiz">ทำใหม่</button></div>
+    <div class="score" id="score" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="footer"><span>สื่อการเรียนรู้คณิตศาสตร์ ม.4 · ความสัมพันธ์และฟังก์ชัน</span><span>MATH LAB</span></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const mode=$('mode'), equation=$('equation'), pairs=$('pairs'), xmin=$('xmin'), xmax=$('xmax');
+const canvas=$('graph'), ctx=canvas.getContext('2d');
+const C={bg:'#f7f5ef',grid:'#e4e0d5',label:'#6b7279',axis:'#1b2130',curve:'#c2562b',hover:'#1b2130'};
+let graphData={type:'equation',fn:null,pts:[],xmin:-5,xmax:5,ymin:-5,ymax:10,formula:'y = x²'};
+let hover=null;
+
+function parseFunction(src){
+  let s=src.trim().replace(/²/g,'^2').replace(/π/g,'pi').replace(/\s+/g,'');
+  if(!s) throw Error('กรุณาป้อนสมการ');
+  if(!/^[0-9xpi+\-*/^().,a-z]+$/i.test(s)) throw Error('พบอักขระที่ไม่รองรับในสมการ');
+  let scrub=s.replace(/(?:sqrt|abs|sin|cos|tan|log|ln|exp|pi)/gi,'');
+  if(/[a-wyz]/i.test(scrub)) throw Error('ใช้ตัวแปร x และฟังก์ชันที่กำหนดไว้เท่านั้น');
+  let js=s.replace(/\^/g,'**').replace(/\bpi\b/gi,'Math.PI');
+  for(const n of ['sqrt','abs','sin','cos','tan','log','ln','exp']){
+    const m={sqrt:'sqrt',abs:'abs',sin:'sin',cos:'cos',tan:'tan',log:'log10',ln:'log',exp:'exp'}[n];
+    js=js.replace(new RegExp('\\b'+n+'\\s*\\(','gi'),'Math.'+m+'(');
+  }
+  js=js.replace(/(\d)(x\b|Math\.PI|\()/g,'$1*$2').replace(/(x|Math\.PI|\))(?=(x|Math\.PI|\())/g,'$1*');
+  if(/[^0-9xMathPI+\-*/().,a-z]/i.test(js)) throw Error('ไม่สามารถอ่านสมการนี้ได้');
+  let fn;
+  try{fn=new Function('x','"use strict"; return ('+js+');')}catch(e){throw Error('รูปแบบสมการไม่ถูกต้อง โปรดตรวจเครื่องหมายและวงเล็บ')}
+  const test=fn(1);
+  if(typeof test!=='number') throw Error('สมการนี้ไม่สามารถคำนวณเป็นตัวเลขได้');
+  return fn;
+}
+function parsePairs(src){
+  const matches=[...src.matchAll(/\(?\s*([+-]?(?:\d+\.?\d*|\.\d+))\s*[,;]\s*([+-]?(?:\d+\.?\d*|\.\d+))\s*\)?/g)];
+  const cleaned=src.replace(/\(?\s*[+-]?(?:\d+\.?\d*|\.\d+)\s*[,;]\s*[+-]?(?:\d+\.?\d*|\.\d+)\s*\)?/g,'').replace(/[\s()[\]{}]/g,'');
+  if(!matches.length||cleaned.replace(/[,;]/g,'')!=='') throw Error('กรุณาป้อนคู่อันดับในรูป (x, y) เช่น (1, 2), (2, 4)');
+  const pts=matches.map(m=>({x:Number(m[1]),y:Number(m[2])}));
+  if(pts.some(p=>!Number.isFinite(p.x)||!Number.isFinite(p.y))) throw Error('คู่อันดับต้องเป็นจำนวนจริง');
+  return pts;
+}
+function uniqueSorted(a){return [...new Set(a)].sort((x,y)=>x-y)}
+function setText(a,limit=8){
+ const u=uniqueSorted(a);
+ if(!u.length)return '∅';
+ if(u.length>limit)return `{${u.slice(0,limit).map(fmt).join(', ')}, …} (${u.length} ค่าในช่วงที่สำรวจ)`;
+ return `{${u.map(fmt).join(', ')}}`;
+}
+function fmt(n){if(Math.abs(n)<1e-9)n=0;return Number(n.toFixed(3)).toString()}
+function niceRange(a,b){if(!Number.isFinite(a)||!Number.isFinite(b)||a===b)return [-5,5];let pad=(b-a)*.12||1;return [a-pad,b+pad]}
+
+function markActive(){
+ const key=mode.value==='pairs'?'pairs':equation.value.replace(/\s/g,'');
+ document.querySelectorAll('.tile').forEach(t=>t.classList.toggle('active',t.dataset.example===key));
+}
+
+function setup(){
+ $('error').textContent='';
+ try{
+  const type=mode.value;
+  if(type==='equation'){
+   const fn=parseFunction(equation.value), lo=Number(xmin.value), hi=Number(xmax.value);
+   if(!Number.isFinite(lo)||!Number.isFinite(hi)||lo>=hi)throw Error('ค่า x ต่ำสุดต้องน้อยกว่าค่า x สูงสุด');
+   const samples=[], ys=[];
+   for(let i=0;i<=900;i++){const x=lo+(hi-lo)*i/900;let y;try{y=fn(x)}catch(e){y=NaN}if(Number.isFinite(y)&&Math.abs(y)<1e6){samples.push({x,y});ys.push(y)}}
+   if(!samples.length)throw Error('ไม่พบค่าที่นำมาวาดกราฟได้ในช่วงนี้');
+   let [ymin,ymax]=niceRange(Math.min(...ys),Math.max(...ys));
+   if(ymax-ymin<1)ymin-=1,ymax+=1;
+   graphData={type,fn,pts:[],samples,xmin:lo,xmax:hi,ymin,ymax,formula:'y = '+equation.value};
+   $('displayFormula').textContent='สมการ: y = '+equation.value;
+   const f=equation.value.replace(/\s/g,'').replace(/²/g,'^2');
+   let d=`ช่วงที่สำรวจ [${fmt(lo)}, ${fmt(hi)}]`, r=`ค่าที่คำนวณได้ในช่วงสำรวจ`;
+   if(/^x\^?2$/.test(f)){d='ℝ (จำนวนจริงทั้งหมด)';r='[0, ∞)'}
+   else if(/^2\*?x\+1$/.test(f)||/^2x\+1$/.test(f)||/^x\*?2\+1$/.test(f)){d='ℝ (จำนวนจริงทั้งหมด)';r='ℝ (จำนวนจริงทั้งหมด)'}
+   else if(/^sqrt\(x\)$/.test(f)){d='[0, ∞)';r='[0, ∞)'}
+   else if(/^1\/x$/.test(f)){d='ℝ \\ {0}';r='ℝ \\ {0}'}
+   else if(/^sin\(x\)$/.test(f)||/^cos\(x\)$/.test(f)){d='ℝ (จำนวนจริงทั้งหมด)';r='[−1, 1]'}
+   $('domain').textContent=d;$('range').textContent=r;
+   $('explanation').textContent='กราฟแสดงเฉพาะช่วง x ที่เลือกไว้ โดเมนและเรนจ์ที่แสดงเป็นคำอธิบายทางคณิตศาสตร์สำหรับตัวอย่างที่ระบบรู้จัก ส่วนสมการอื่นให้ใช้กราฟช่วยสำรวจและตรวจสอบเงื่อนไขของสมการ';
+   $('observations').innerHTML=`<li>กราฟถูกวาดจาก x = ${fmt(lo)} ถึง x = ${fmt(hi)}</li><li>ในช่วงที่สำรวจ พบค่า y ประมาณ ${fmt(Math.min(...ys))} ถึง ${fmt(Math.max(...ys))}</li><li>ลองเปลี่ยนสมการหรือช่วง x แล้วสังเกตการเปลี่ยนแปลงของกราฟ</li>`;
+  }else{
+   const pts=parsePairs(pairs.value), dx=uniqueSorted(pts.map(p=>p.x)), dy=uniqueSorted(pts.map(p=>p.y));
+   const [lo,hi]=niceRange(Math.min(...dx),Math.max(...dx)),[yl,yh]=niceRange(Math.min(...dy),Math.max(...dy));
+   graphData={type,fn:null,pts,xmin:lo,xmax:hi,ymin:yl,ymax:yh,formula:'R = '+pts.map(p=>`(${fmt(p.x)}, ${fmt(p.y)})`).join(', ')};
+   $('displayFormula').textContent='ความสัมพันธ์: '+graphData.formula;
+   $('domain').textContent=setText(dx);$('range').textContent=setText(dy);
+   const map=new Map();pts.forEach(p=>{if(!map.has(p.x))map.set(p.x,new Set());map.get(p.x).add(p.y)});
+   const bad=[...map].filter(([x,ys])=>ys.size>1).map(([x])=>x);
+   $('explanation').textContent=bad.length?`ชุดข้อมูลนี้ไม่เป็นฟังก์ชัน เพราะ x = ${bad.map(fmt).join(', ')} จับคู่กับ y มากกว่าหนึ่งค่า`:'ชุดข้อมูลนี้เป็นฟังก์ชัน เพราะค่า x แต่ละค่าจับคู่กับค่า y เพียงค่าเดียว (ค่า x ซ้ำได้หากจับคู่กับ y เดิม)';
+   $('observations').innerHTML=`<li>โดเมนคือค่าพิกัดตัวหน้า x ที่ไม่ซ้ำกัน ${setText(dx,20)}</li><li>เรนจ์คือค่าพิกัดตัวหลัง y ที่ไม่ซ้ำกัน ${setText(dy,20)}</li><li>${bad.length?'มีค่า x อย่างน้อยหนึ่งค่าที่สัมพันธ์กับ y หลายค่า จึงไม่เป็นฟังก์ชัน':'ค่า x ทุกค่ามีผลลัพธ์ y เพียงค่าเดียว จึงเป็นฟังก์ชัน'}</li>`;
+  }
+  markActive();
+  draw();
+ }catch(e){$('error').textContent=e.message}
+}
+
+const PAD={l:47,r:15,t:15,b:32};
+function draw(){
+ const rect=canvas.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
+ canvas.width=Math.max(1,Math.round(rect.width*dpr));canvas.height=Math.max(1,Math.round(rect.height*dpr));
+ ctx.setTransform(dpr,0,0,dpr,0,0);
+ const W=rect.width,H=rect.height,pad=PAD,gw=W-pad.l-pad.r,gh=H-pad.t-pad.b;
+ const g=graphData,xp=x=>pad.l+(x-g.xmin)/(g.xmax-g.xmin)*gw,yp=y=>pad.t+(g.ymax-y)/(g.ymax-g.ymin)*gh;
+ ctx.clearRect(0,0,W,H);ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);
+ const xstep=(g.xmax-g.xmin)>15?5:(g.xmax-g.xmin)>7?2:1, ystep=(g.ymax-g.ymin)>20?5:(g.ymax-g.ymin)>8?2:1;
+ ctx.font='11px "IBM Plex Sans Thai", Tahoma';ctx.lineWidth=1;
+ for(let x=Math.ceil(g.xmin/xstep)*xstep;x<=g.xmax;x+=xstep){const X=xp(x);ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(X,pad.t);ctx.lineTo(X,H-pad.b);ctx.stroke();ctx.fillStyle=C.label;ctx.textAlign='center';ctx.fillText(fmt(x),X,H-pad.b+17)}
+ for(let y=Math.ceil(g.ymin/ystep)*ystep;y<=g.ymax;y+=ystep){const Y=yp(y);ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(pad.l,Y);ctx.lineTo(W-pad.r,Y);ctx.stroke();ctx.fillStyle=C.label;ctx.textAlign='right';ctx.fillText(fmt(y),pad.l-7,Y+4)}
+ ctx.strokeStyle=C.axis;ctx.lineWidth=1.2;
+ if(g.xmin<=0&&g.xmax>=0){ctx.beginPath();ctx.moveTo(xp(0),pad.t);ctx.lineTo(xp(0),H-pad.b);ctx.stroke()}
+ if(g.ymin<=0&&g.ymax>=0){ctx.beginPath();ctx.moveTo(pad.l,yp(0));ctx.lineTo(W-pad.r,yp(0));ctx.stroke()}
+ ctx.fillStyle=C.axis;ctx.font='italic 13px Georgia, serif';ctx.textAlign='center';ctx.fillText('x',W-10,Math.max(12,yp(0)-8));ctx.fillText('y',Math.min(W-10,xp(0)+12),12);
+ if(g.type==='equation'){
+  ctx.strokeStyle=C.curve;ctx.lineWidth=2.8;ctx.lineJoin='round';ctx.beginPath();let started=false,prev=null;
+  for(let i=0;i<=1200;i++){const x=g.xmin+(g.xmax-g.xmin)*i/1200;let y;try{y=g.fn(x)}catch(e){y=NaN}
+   if(!Number.isFinite(y)||Math.abs(y)>1e5||y<g.ymin-3*(g.ymax-g.ymin)||y>g.ymax+3*(g.ymax-g.ymin)){started=false;prev=null;continue}
+   if(prev&&Math.abs(y-prev.y)>(g.ymax-g.ymin)*.6){started=false}
+   if(!started){ctx.moveTo(xp(x),yp(y));started=true}else ctx.lineTo(xp(x),yp(y));prev={x,y};
+  }ctx.stroke();
+ }else{
+  g.pts.forEach(p=>{ctx.beginPath();ctx.fillStyle=C.curve;ctx.arc(xp(p.x),yp(p.y),6,0,Math.PI*2);ctx.fill();ctx.strokeStyle=C.bg;ctx.lineWidth=2;ctx.stroke()});
+ }
+ if(hover){ctx.beginPath();ctx.fillStyle=C.hover;ctx.arc(hover.px,hover.py,5,0,Math.PI*2);ctx.fill();ctx.font='12px "IBM Plex Sans Thai", Tahoma';ctx.fillStyle=C.axis;ctx.textAlign='left';const label=`(${fmt(hover.x)}, ${fmt(hover.y)})`;let tx=hover.px+9;if(tx+95>W)tx=hover.px-100;let ty=Math.max(14,hover.py-10);ctx.fillText(label,tx,ty)}
+}
+canvas.addEventListener('mousemove',e=>{
+ const r=canvas.getBoundingClientRect(),xpix=e.clientX-r.left,ypix=e.clientY-r.top,g=graphData,pad=PAD,gw=r.width-pad.l-pad.r,gh=r.height-pad.t-pad.b;
+ const x=g.xmin+(xpix-pad.l)/gw*(g.xmax-g.xmin);if(xpix<pad.l||xpix>r.width-pad.r||ypix<pad.t||ypix>r.height-pad.b){hover=null;draw();return}
+ if(g.type==='equation'){let y;try{y=g.fn(x)}catch(e){y=NaN}if(!Number.isFinite(y)||Math.abs(y)>1e5){hover=null;draw();return}hover={x,y,px:xpix,py:ypix}}
+ else {let nearest=null,dist=Infinity;g.pts.forEach(p=>{const d=Math.hypot((p.x-g.xmin)/(g.xmax-g.xmin)*gw-(xpix-pad.l),(p.y-g.ymin)/(g.ymax-g.ymin)*gh-(ypix-pad.t));if(d<dist){dist=d;nearest=p}});hover=nearest?{x:nearest.x,y:nearest.y,px:xpix,py:ypix}:null}
+ draw()
+});
+canvas.addEventListener('mouseleave',()=>{hover=null;draw()});
+
+/* ---------- Gallery thumbnails ---------- */
+function drawThumbs(){
+ document.querySelectorAll('.thumb').forEach(c=>{
+  const r=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+  if(!r.width)return;
+  c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);
+  const t=c.getContext('2d');t.setTransform(dpr,0,0,dpr,0,0);
+  const W=r.width,H=r.height,bg=c.dataset.bg,fg=c.dataset.fg,src=c.closest('[data-example]').dataset.example;
+  t.fillStyle=bg;t.fillRect(0,0,W,H);
+  let x0=-5,x1=5,y0=-6,y1=6,fn=null,pts=null;
+  if(src==='pairs'){pts=[{x:1,y:2},{x:2,y:4},{x:3,y:4},{x:4,y:6}];x0=-.5;x1=5.5;y0=-.5;y1=7.5}
+  else{fn=parseFunction(src);
+   if(src==='x^2'){x0=-4.5;x1=4.5;y0=-2;y1=20}
+   else if(src==='sqrt(x)'){x0=-1;x1=10;y0=-1;y1=4.5}
+   else if(src==='sin(x)'){x0=-7;x1=7;y0=-2.6;y1=2.6}
+   else if(src==='2*x+1'){y0=-10;y1=12}}
+  const X=x=>(x-x0)/(x1-x0)*W,Y=y=>(y1-y)/(y1-y0)*H;
+  const sx=(x1-x0)>9?2:1, sy=(y1-y0)>14?4:(y1-y0)>8?2:1;
+  t.strokeStyle=fg;t.lineWidth=1;t.globalAlpha=.13;
+  for(let gx=Math.ceil(x0/sx)*sx;gx<=x1;gx+=sx){t.beginPath();t.moveTo(X(gx),0);t.lineTo(X(gx),H);t.stroke()}
+  for(let gy=Math.ceil(y0/sy)*sy;gy<=y1;gy+=sy){t.beginPath();t.moveTo(0,Y(gy));t.lineTo(W,Y(gy));t.stroke()}
+  t.globalAlpha=.5;t.lineWidth=1.3;
+  t.beginPath();t.moveTo(X(0),0);t.lineTo(X(0),H);t.moveTo(0,Y(0));t.lineTo(W,Y(0));t.stroke();
+  t.globalAlpha=1;t.lineWidth=3.5;t.lineCap='round';t.lineJoin='round';
+  if(fn){t.beginPath();let on=false,prev=null;
+   for(let i=0;i<=500;i++){const x=x0+(x1-x0)*i/500;let y;try{y=fn(x)}catch(e){y=NaN}
+    if(!Number.isFinite(y)||Math.abs(y)>200){on=false;prev=null;continue}
+    if(prev!==null&&Math.abs(y-prev)>(y1-y0)*.8)on=false;
+    on?t.lineTo(X(x),Y(y)):(t.moveTo(X(x),Y(y)),on=true);prev=y}
+   t.stroke()}
+  else pts.forEach(p=>{t.beginPath();t.fillStyle=fg;t.arc(X(p.x),Y(p.y),7,0,Math.PI*2);t.fill()});
+ });
+}
+
+/* ---------- Events ---------- */
+mode.addEventListener('change',()=>{const pairsMode=mode.value==='pairs';$('equationBox').hidden=pairsMode;$('pairsBox').hidden=!pairsMode;setup()});
+$('update').addEventListener('click',setup);
+$('reset').addEventListener('click',()=>{mode.value='equation';equation.value='x^2';xmin.value=-5;xmax.value=5;pairs.value='(1, 2)\n(2, 4)\n(3, 4)\n(4, 6)';$('equationBox').hidden=false;$('pairsBox').hidden=true;hover=null;setup()});
+document.querySelectorAll('[data-example]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.example;if(v==='pairs'){mode.value='pairs';$('equationBox').hidden=true;$('pairsBox').hidden=false}else{mode.value='equation';$('equationBox').hidden=false;$('pairsBox').hidden=true;equation.value=v;if(v==='sqrt(x)'){xmin.value=0;xmax.value=10}else{xmin.value=-5;xmax.value=5}}setup()}));
+const track=$('track');
+const step=()=>{const t=track.querySelector('.tile');return t?t.getBoundingClientRect().width+20:300};
+$('prev').addEventListener('click',()=>track.scrollBy({left:-step(),behavior:'smooth'}));
+$('next').addEventListener('click',()=>track.scrollBy({left:step(),behavior:'smooth'}));
+
+const answers={q1:{b:'ถูกต้อง โดเมนคือสมาชิกตัวหน้าในแต่ละคู่อันดับ ได้แก่ {1, 2, 3}',a:'โดเมนเป็นค่า x ไม่ใช่ค่า y',c:'โดเมนรวบรวมเฉพาะค่าตัวหน้า ไม่รวมค่าตัวหลัง'},q2:{c:'ถูกต้อง เมื่อนำค่า x ไปยกกำลังสอง จะได้ 4, 1, 0, 1, 4 ดังนั้นเรนจ์คือ {0, 1, 4}',a:'กำลังสองของจำนวนลบเป็นจำนวนบวก และเรนจ์ไม่ซ้ำค่า',b:'นี่คือโดเมนที่โจทย์กำหนด ไม่ใช่เรนจ์'},q3:{a:'ถูกต้อง ฟังก์ชันต้องกำหนดผลลัพธ์ y ได้เพียงค่าเดียวต่อ x หนึ่งค่า',b:'จำนวนคู่อันดับไม่ได้เป็นตัวตัดสินว่าเป็นฟังก์ชันหรือไม่',c:'ค่า y ซ้ำหรือไม่ไม่ใช่เกณฑ์หลัก ต้องตรวจค่า x'}};
+$('checkQuiz').addEventListener('click',()=>{let score=0,answered=0;document.querySelectorAll('.quizq').forEach((q,i)=>{const name='q'+(i+1),ans=q.dataset.answer,sel=q.querySelector('input:checked'),fb=q.querySelector('.feedback');fb.hidden=false;if(sel)answered++;if(sel&&sel.value===ans){score++;fb.style.color='#2f6b4f';fb.textContent='✓ '+answers[name][ans]}else{fb.style.color='#b23a2e';fb.textContent=(sel?'✗ ':'ยังไม่ได้ตอบ • ')+answers[name][ans]+' (คำตอบ: '+ans.toUpperCase()+')'}});$('score').textContent=`คะแนน ${score}/3 ข้อ · ตอบแล้ว ${answered}/3 ข้อ`});
+$('clearQuiz').addEventListener('click',()=>{document.querySelectorAll('.quizq').forEach(q=>{q.querySelectorAll('input').forEach(i=>i.checked=false);const fb=q.querySelector('.feedback');fb.hidden=true;fb.textContent=''});$('score').textContent=''});
+window.addEventListener('resize',()=>{draw();drawThumbs()});
+setup();
+drawThumbs();
+</script>
+</body>
+</html>
